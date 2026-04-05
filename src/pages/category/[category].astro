@@ -26,6 +26,7 @@ export async function getStaticPaths() {
 
 const { cat, articles } = Astro.props;
 const subcats = SUBCATEGORIES[cat.slug];
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <Base title={cat.label}>
   <style>
@@ -106,7 +107,7 @@ const subcats = SUBCATEGORIES[cat.slug];
   </style>
 
   <div class="page-header">
-    <nav class="breadcrumb"><a href="/">Home</a> → {cat.label}</nav>
+    <nav class="breadcrumb"><a href={`${base}/`}>Home</a> → {cat.label}</nav>
     <h1>{cat.emoji} {cat.label} <span class="count">({articles.length} articles)</span></h1>
   </div>
 
@@ -122,7 +123,7 @@ const subcats = SUBCATEGORIES[cat.slug];
           </summary>
           <div class="accordion-body">
             {group.map(a => (
-              <a href={`/articles/${a.data.slug}`}>{a.data.title}</a>
+              <a href={`${base}/articles/${a.data.slug}`}>{a.data.title}</a>
             ))}
           </div>
         </details>
@@ -131,7 +132,7 @@ const subcats = SUBCATEGORIES[cat.slug];
   ) : (
     <ul class="article-list">
       {articles.map(a => (
-        <li><a href={`/articles/${a.data.slug}`}>{a.data.title}</a></li>
+        <li><a href={`${base}/articles/${a.data.slug}`}>{a.data.title}</a></li>
       ))}
     </ul>
   )}

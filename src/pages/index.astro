@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { CATEGORIES } from '../lib/categories';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 // Problem-picker scenarios → article slugs
 const PROBLEMS = [
@@ -168,7 +169,7 @@ const START_HERE = [
     <p>Six articles that will make you a much better cat parent.</p>
     <ol class="start-list">
       {START_HERE.map(item => (
-        <li><a href={`/articles/${item.slug}`}>{item.title}</a></li>
+        <li><a href={`${base}/articles/${item.slug}`}>{item.title}</a></li>
       ))}
     </ol>
   </div>
@@ -178,7 +179,7 @@ const START_HERE = [
     <div class="section-title">🚨 My cat is...</div>
     <div class="problem-grid">
       {PROBLEMS.map(p => (
-        <a href={`/articles/${p.slug}`} class="problem-btn">
+        <a href={`${base}/articles/${p.slug}`} class="problem-btn">
           <span class="problem-emoji">{p.emoji}</span>
           {p.label}
         </a>
@@ -191,7 +192,7 @@ const START_HERE = [
     <div class="section-title">📚 Browse by topic</div>
     <div class="category-grid">
       {CATEGORIES.map(cat => (
-        <a href={`/category/${cat.slug}`} class="category-card">
+        <a href={`${base}/category/${cat.slug}`} class="category-card">
           <span class="cat-emoji">{cat.emoji}</span>
           <span class="cat-label">{cat.label}</span>
         </a>

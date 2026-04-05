@@ -10,6 +10,7 @@ interface Props {
 }
 
 const { title, category, seeAlso = [], allArticles } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const cat = CATEGORIES.find(c => c.slug === category);
 const seeAlsoArticles = seeAlso
@@ -101,8 +102,8 @@ const seeAlsoArticles = seeAlso
   </style>
 
   <nav class="breadcrumb">
-    <a href="/">Home</a> →
-    {cat && <><a href={`/category/${cat.slug}`}>{cat.label}</a> → </>}
+    <a href={`${base}/`}>Home</a> →
+    {cat && <><a href={`${base}/category/${cat.slug}`}>{cat.label}</a> → </>}
     {title}
   </nav>
 
@@ -118,13 +119,13 @@ const seeAlsoArticles = seeAlso
       <h3>Related articles</h3>
       <ul>
         {seeAlsoArticles.map(a => (
-          <li><a href={`/articles/${a!.data.slug}`}>{a!.data.title}</a></li>
+          <li><a href={`${base}/articles/${a!.data.slug}`}>{a!.data.title}</a></li>
         ))}
       </ul>
     </aside>
   )}
 
-  <a href={cat ? `/category/${cat.slug}` : '/'} class="back-link">
+  <a href={cat ? `${base}/category/${cat.slug}` : `${base}/`} class="back-link">
     ← Back to {cat ? cat.label : 'Home'}
   </a>
 </Base>
