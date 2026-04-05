@@ -1,0 +1,130 @@
+---
+import Base from './Base.astro';
+import { CATEGORIES } from '../lib/categories';
+
+interface Props {
+  title: string;
+  category: string;
+  seeAlso?: string[];
+  allArticles: Array<{ slug: string; data: { title: string; slug: string } }>;
+}
+
+const { title, category, seeAlso = [], allArticles } = Astro.props;
+
+const cat = CATEGORIES.find(c => c.slug === category);
+const seeAlsoArticles = seeAlso
+  .map(s => allArticles.find(a => a.data.slug === s))
+  .filter(Boolean);
+---
+<Base title={title}>
+  <style>
+    .breadcrumb {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .breadcrumb a { color: var(--brand-dark); }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    .article-title {
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .category-tag {
+      display: inline-block;
+      background: var(--brand);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2em 0.7em;
+      border-radius: 20px;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .article-body {
+      font-size: 1.05rem;
+      line-height: 1.75;
+    }
+    .article-body :global(h2) {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin: 2rem 0 0.75rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--text);
+    }
+    .article-body :global(h2:first-child) {
+      border-top: none;
+      padding-top: 0;
+      margin-top: 0;
+    }
+    .article-body :global(p) { margin-bottom: 1em; }
+    .article-body :global(ul), .article-body :global(ol) {
+      margin: 0.5em 0 1em 1.5em;
+    }
+    .article-body :global(li) { margin-bottom: 0.4em; }
+
+    .see-also {
+      margin-top: 3rem;
+      padding: 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .see-also h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .see-also ul { list-style: none; margin: 0; padding: 0; }
+    .see-also li { margin-bottom: 0.4rem; }
+    .see-also a { color: var(--brand-dark); font-weight: 500; }
+    .see-also a:hover { text-decoration: underline; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+      margin-top: 2.5rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .back-link:hover { color: var(--text); }
+  </style>
+
+  <nav class="breadcrumb">
+    <a href="/">Home</a> →
+    {cat && <><a href={`/category/${cat.slug}`}>{cat.label}</a> → </>}
+    {title}
+  </nav>
+
+  <h1 class="article-title">{title}</h1>
+  {cat && <span class="category-tag">{cat.label}</span>}
+
+  <div class="article-body">
+    <slot />
+  </div>
+
+  {seeAlsoArticles.length > 0 && (
+    <aside class="see-also">
+      <h3>Related articles</h3>
+      <ul>
+        {seeAlsoArticles.map(a => (
+          <li><a href={`/articles/${a!.data.slug}`}>{a!.data.title}</a></li>
+        ))}
+      </ul>
+    </aside>
+  )}
+
+  <a href={cat ? `/category/${cat.slug}` : '/'} class="back-link">
+    ← Back to {cat ? cat.label : 'Home'}
+  </a>
+</Base>
